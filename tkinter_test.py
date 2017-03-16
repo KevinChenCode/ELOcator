@@ -86,7 +86,9 @@ class Application(Frame):
         for i in range(8):
             for j in range(8):
                     square_colour, piece_colour, piece_type = board_utils.position_picture(board_type, i, j)
-                    im = Image.open("chess_pieces/png/" + board_utils.get_picture_name(square_colour, piece_colour, piece_type))
+                    print square_colour, piece_colour, piece_type
+                    string = "chess_pieces/png/" + board_utils.get_picture_name(square_colour, piece_colour, piece_type)
+                    im = Image.open(string)
                     photo = ImageTk.PhotoImage(im)
                     self.chess_window.create_image((i+.5)*SQUARE_SIZE, (j+.5)*SQUARE_SIZE, image=photo)
 
