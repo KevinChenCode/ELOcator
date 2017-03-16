@@ -1,6 +1,7 @@
 from Tkinter import *
+from PIL import Image, ImageTk
+import board_utils
 import os
-
 
 SQUARE_SIZE = 65
 
@@ -59,21 +60,44 @@ class Application(Frame):
         self.bull.pack(side=BOTTOM)
         self.bull['command'] = self.shit
 
+
+
+    def create_piece_pics(self):
+        for piece_colour in ('b', 'w'):
+            for piece_type in ('b', 'q', 'r', 'k', 'n', 'p'):
+                for square_colour in ('b', 'w'):
+                    self.piece_pics[square_colour+piece_type+piece_colour] = board_utils.get_picture_name(square_colour, piece_colour, piece_type)
+
+        return
+
+
+
     def create_board(self):
-        self.chess_window = Canvas(self, width=SQUARE_SIZE*8, height=SQUARE_SIZE*8, bd=1)
+        #creates the chess board is printed to screen
+        self.board = Frame(self)
+
+        self.piece_pics = {}
+
+        self.create_piece_pics()
+
+
+        board_type = board_utils.fen_to_board("init/initial_position.fen")
+        self.chess_window = Canvas(self.board, width=SQUARE_SIZE*8, height=SQUARE_SIZE*8, bd=1)
         for i in range(8):
             for j in range(8):
-                if (i + j)% 2 == 1:
-                    self.chess_window.create_rectangle(i*SQUARE_SIZE ,
-                    j*SQUARE_SIZE , i*SQUARE_SIZE + SQUARE_SIZE,
-                    j*SQUARE_SIZE + SQUARE_SIZE, fill="cornflower blue",
-                    outline="cornflower blue")
-                self.chess_window.create_text((i+.5)*SQUARE_SIZE, (j+.5)*SQUARE_SIZE, text=chr(ord('a') + i) + chr(ord('8') - j))
+                    square_colour, piece_colour, piece_type = board_utils.position_picture(board_type, i, j)
+                    im = Image.open("chess_pieces/png/" + board_utils.get_picture_name(square_colour, piece_colour, piece_type))
+                    photo = ImageTk.PhotoImage(im)
+                    self.chess_window.create_image((i+.5)*SQUARE_SIZE, (j+.5)*SQUARE_SIZE, image=photo)
+
         self.chess_window.create_line(4, 4, 4, 8*SQUARE_SIZE)
         self.chess_window.create_line(4, 4, 8*SQUARE_SIZE, 4)
         self.chess_window.create_line(8*SQUARE_SIZE, 4, 8*SQUARE_SIZE, 8*SQUARE_SIZE)
         self.chess_window.create_line(4, 8*SQUARE_SIZE, 8*SQUARE_SIZE, 8*SQUARE_SIZE)
         self.chess_window.pack(side=RIGHT)
+
+        self.board.pack(side=RIGHT)
+
         return
 
     def __init__(self, master=None):

@@ -1,8 +1,19 @@
 import os
 import numpy as np
 
+
+char_map = {
+'w':'white',
+'b':'black',
+'r':'rook', 
+'q': 'queen',
+'p': 'pawn',
+'n': 'knight',
+'k': 'king',
+'b': 'bishop'
+}
+
 def fen_to_board(path):
-	print "hi"
 	with open(path, "r") as f:
 
 		board = np.chararray((8, 8))
@@ -23,4 +34,28 @@ def fen_to_board(path):
 					j+=1
 		return board
 
-#def board_to_fen(array)
+def get_picture_name( square_colour, piece_colour, piece_type):
+        #given the type of piece it is, returns the name of the picture it correlates to
+        return char_map[piece_colour] + '_' + char_map[piece_type] + '_' + square_colour + ".png"
+
+
+def position_picture(board, row, col):
+    #given a board, returns the information at the specific square
+    square_colour = ""
+    piece_colour = ""
+    piece_type = ""
+
+    if (row + col) % 2 == 1:
+        square_colour = "b"
+    else:
+        square_colour = "w"
+
+    piece_type = board[row][col].lower()
+    if board[row][col].isupper():
+        piece_type = "w"
+    elif board[row][col].islower():
+        piece_type = "b"
+    else:
+        piece_type = "_" 
+
+    return (square_colour, piece_colour, piece_type)
