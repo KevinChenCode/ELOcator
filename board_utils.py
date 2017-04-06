@@ -50,14 +50,19 @@ def position_picture(board, row, col):
     piece_colour = ""
     piece_type = ""
 
+
+
     if (row + col) % 2 == 1:
         square_colour = "b"
     else:
         square_colour = "w"
 
+    if piece_type == '_':
+    	return square_colour + '.png'
+
     piece_type = board[row][col].lower()
     if piece_type == '_':
-    	piece_type = ''
+    	piece_type = ' '
 
     if board[row][col].isupper():
         piece_colour = "w"
